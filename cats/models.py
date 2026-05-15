@@ -2,6 +2,14 @@
 from django.db import models
 
 
+class Achievement(models.Model):
+    """Model representing an achievement that a cat can have."""
+    name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.name
+
+
 class Owner(models.Model):
     """Model representing a cat owner."""
 
@@ -21,7 +29,19 @@ class Cat(models.Model):
     birth_year = models.IntegerField()
     owner = models.ForeignKey(
         Owner, related_name='cats', on_delete=models.CASCADE)
+    achievements = models.ManyToManyField(Achievement,
+                                          through='AchievementCat')
 
     def __str__(self):
         """Return a string representation of the Cat object."""
         return self.name
+
+
+class AchievementCat(models.Model):
+    """Model representing the relationship between cats and their
+    achievements."""
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
+    cat = models.ForeignKey(Cat, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.achievement} {self.cat}'
