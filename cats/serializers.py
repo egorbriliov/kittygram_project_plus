@@ -1,23 +1,32 @@
 """Serializers for the Cat model."""
 from rest_framework import serializers
 
+import datetime as dt
+
 from .models import AchievementCat, Cat, Owner, Achievement
 
 
 class AchievementSerializer(serializers.ModelSerializer):
     """Serializer for the Achievement model."""
+    achievement_name = serializers.CharField(source='name')
+
     class Meta:
         model = Achievement
-        fields = ('id', 'name')
+        fields = ('id', 'achievement_name')
 
 
 class CatSerializer(serializers.ModelSerializer):
     """Serializer for the Cat model."""
     achievements = AchievementSerializer(many=True, required=False)
+    age = serializers.SerializerMethodField()
 
     class Meta:
         model = Cat
-        fields = ('id', 'name', 'color', 'birth_year', 'owner', 'achievements')
+        fields = ('id', 'name', 'color', 'birth_year', 'owner', 'achievements',
+                  'age')
+
+    def get_age(self, obj):
+        return dt.datetime.now().year - obj.birth_year
 
     def create(self, validated_data):
         if 'achievements' not in self.initial_data:  # type: ignore
