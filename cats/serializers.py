@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 import datetime as dt
 
-from .models import AchievementCat, Cat, Owner, Achievement
+from .models import AchievementCat, Cat, Owner, Achievement, CHOICES
 
 
 class AchievementSerializer(serializers.ModelSerializer):
@@ -19,6 +19,7 @@ class CatSerializer(serializers.ModelSerializer):
     """Serializer for the Cat model."""
     achievements = AchievementSerializer(many=True, required=False)
     age = serializers.SerializerMethodField()
+    color = serializers.ChoiceField(choices=CHOICES)
 
     class Meta:
         model = Cat

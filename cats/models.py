@@ -1,6 +1,14 @@
 """Models for the cats app."""
 from django.db import models
 
+CHOICES = (
+        ('Gray', 'Серый'),
+        ('Black', 'Чёрный'),
+        ('White', 'Белый'),
+        ('Ginger', 'Рыжий'),
+        ('Mixed', 'Смешанный'),
+    )
+
 
 class Achievement(models.Model):
     """Model representing an achievement that a cat can have."""
@@ -25,7 +33,7 @@ class Cat(models.Model):
     """Model representing a cat."""
 
     name = models.CharField(max_length=16)
-    color = models.CharField(max_length=16)
+    color = models.CharField(max_length=16, choices=CHOICES)
     birth_year = models.IntegerField()
     owner = models.ForeignKey(
         Owner, related_name='cats', on_delete=models.CASCADE)
